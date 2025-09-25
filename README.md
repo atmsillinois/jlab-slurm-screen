@@ -9,7 +9,8 @@ This script should be installed on keeling. It will start a jupyter lab session 
 ### Install
 ```
 git clone https://github.com/atmsillinois/jlab-slurm-screen
-chmod u+x jlab-slurm-screen
+cd jlab-slurm-screen
+chmod u+x jlab-slurm-screen.sh
 ```
 You may wish to consider adding this folder to your path.
 
