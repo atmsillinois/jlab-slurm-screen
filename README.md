@@ -19,13 +19,14 @@ cd /path/to/jlab-slurm-screen/
 
 ### Arguments (any order):
 
-hours=2   |   time of job in hours
-session=jlab 
-cpus=4 
-mem=8G 
-partition=seseml 
-jlab_port=8888 
-[dask_port=8787]
+
+| hours=2   |   time of job in hours |
+|session=jlab |  prefix of slurm job  |
+|cpus=4     |   number of cores     | 
+|mem=8G     |   memory per core    |
+|partition=seseml   |   slurm partition  |
+|jlab_port=8888     |   jupyerlab port to try (may change if not available)   | 
+|dask_port=8787     |   [optional] second port to tunnel (i.e., for dask dashboard) |
 
 Behavior knobs (env vars):
 -   READY_WAIT=0   # seconds to wait here for NODE+PORT; 0 = wait indefinitely (default)
