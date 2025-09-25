@@ -1,6 +1,8 @@
+
+
 # keeling.earth.illinois.edu — Start Jupyter Lab on a Slurm compute node (single SRUN).
-Writes `~/.jlab/<session>_<stamp>.{log,url,port,node,where,tunnel}`
-WAITS to print SSH commands + Jupyter URL until NODE and PORT are ready.
+
+This script should be installed on keeling. It will start a jupyter lab session on a keeling compute node given inputted parameters, and then provide you a command to run in a separate terminal on your local machine to establish an ssh tunnel to a keeling compute node.  It waits to print SSH commands + Jupyter URL until the compute node has the jupyter lab session ready.
 
 ## Quickstart:
 
@@ -16,6 +18,7 @@ You may wish to consider adding this folder to your path.
 cd /path/to/jlab-slurm-screen/
 ./jlab-slurm-screen.sh hours=2 session=jlab cpus=4 mem=8G jlab_port=5678
 ```
+NOTE: this job will persist on keeling until the time has expired.  To reconnect
 
 ### Arguments (any order):
 
@@ -34,4 +37,5 @@ Behavior knobs (env vars):
 -   BASTION=       # optional ProxyJump host, e.g. bastion.illinois.edu (adds -J to OUTER ssh)
 
 ## Notes:
-- The session should be persistent for 
+- The session should be persistent for the alotted time.  Thus, to reconnect if you lose your connection to keeling during the alotted time, simply re-establish the ssh tunnel.
+- Debugging info is available in De `~/.jlab/<session>_<stamp>.{log,url,port,node,where,tunnel}` on keeling.
