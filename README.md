@@ -18,7 +18,13 @@ You may wish to consider adding this folder to your path.
 cd /path/to/jlab-slurm-screen/
 ./jlab-slurm-screen.sh hours=2 session=jlab cpus=4 mem=8G jlab_port=5678
 ```
-NOTE: this job will persist on keeling until the time has expired.  To reconnect
+
+### Quitting Early
+
+If your session is called `jlab` (the default):
+```
+screen -S jlab -X quit
+```
 
 ### Arguments (any order):
 
