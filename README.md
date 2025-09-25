@@ -29,7 +29,7 @@ screen -S jlab -X quit
 ### Arguments (any order)
 
 |Argument|Description|
-| :--- | ---: |
+| :--- | :--- |
 | hours=2   |   time of job in hours |
 |session=jlab |  prefix of slurm job  |
 |cpus=4     |   number of cores     | 
