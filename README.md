@@ -1,6 +1,6 @@
 
 
-# keeling.earth.illinois.edu — Start Jupyter Lab on a Slurm compute node (single SRUN).
+# keeling-jlab
 
 This script should be installed on keeling. It will start a jupyter lab session on a keeling compute node given inputted parameters, and then provide you a command to run in a separate terminal on your local machine to establish an ssh tunnel to a keeling compute node.  It waits to print SSH commands + Jupyter URL until the compute node has the jupyter lab session ready.
 
