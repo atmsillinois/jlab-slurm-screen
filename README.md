@@ -46,4 +46,4 @@ Behavior knobs (env vars)
 
 ## Notes
 - The session should be persistent for the alotted time.  Thus, to reconnect if you lose your connection to keeling during the alotted time, simply re-establish the ssh tunnel.
-- Debugging info is available in De `~/.jlab/<session>_<stamp>.{log,url,port,node,where,tunnel}` on keeling.
+- Debugging info is available in `~/.jlab/<session>_<stamp>.{log,url,port,node,where,tunnel}` on keeling.
