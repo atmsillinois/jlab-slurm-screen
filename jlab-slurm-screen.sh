@@ -128,6 +128,8 @@ for i in $(seq 1 7200); do  # up to 2h
   # ensure log file exists
   if [[ -r "$LOG" ]]; then
 
+  START=$(date +%s)
+  TIMEOUT=7200  # seconds
   # Grab first Jupyter token URL
   while [[ ! -s "$URLFILE" ]]; do
     URL=$((grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG"  || true) | head -n1)
@@ -135,7 +137,12 @@ for i in $(seq 1 7200); do  # up to 2h
       echo "$URL" > "$URLFILE"
       break
     fi
-    sleep 0.2
+    sleep 1
+
+    NOW=$(date +%s)
+    if (( NOW - START >= TIMEOUT )); then
+       exit 1 # Timeout reached
+    fi
   done
 
   # Extract actual port from URL
