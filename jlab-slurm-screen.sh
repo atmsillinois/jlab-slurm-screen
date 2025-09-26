@@ -125,10 +125,19 @@ cat > "$WATCHER" <<'WS'
 set -euo pipefail
 # env: LOG NODEFILE URLFILE PORTFILE TUNNELFILE JPORT DPORT ME HEAD BASTION_OPT
 for i in $(seq 1 7200); do  # up to 2h
+  # ensure log file exists
+  if [[ -r "$LOG" ]]; then
+
   # Grab first Jupyter token URL
-  if [[ ! -s "$URLFILE" ]]; then
-    grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG" | head -n1 > "$URLFILE" 2>/dev/null || true
-  fi
+  while [[ ! -s "$URLFILE" ]]; do
+    URL=$((grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG"  || true) | head -n1)
+    if [[ ! -z "$URL" ]]; then
+      echo "$URL" > "$URLFILE"
+      break
+    fi
+    sleep 0.2
+  done
+
   # Extract actual port from URL
   if [[ -s "$URLFILE" && ! -s "$PORTFILE" ]]; then
     awk -F[/:] '{for(i=1;i<=NF;i++) if($i ~ /^[0-9]+$/ && $(i-1) ~ /127\.0\.0\.1/) {print $i; exit}}' "$URLFILE" > "$PORTFILE" 2>/dev/null || true
@@ -155,6 +164,7 @@ ssh $BASTION_OPT -L ${ACTPORT}:127.0.0.1:${ACTPORT} ${ME}@${HEAD} \
 EOF
     fi
     exit 0
+  fi
   fi
   sleep 1
 done
