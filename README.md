@@ -17,7 +17,7 @@ You may wish to consider adding this folder to your path.
 ### Running
 ```
 cd /path/to/jlab-slurm-screen/
-./jlab-slurm-screen.sh hours=2 session=jlab cpus=4 mem=8G jlab_port=5678
+./jlab-slurm-screen.sh hours=2 session=jlab cpus=4 mem=32G jlab_port=5678
 ```
 
 ### Quitting Early
@@ -31,18 +31,18 @@ screen -S jlab -X quit
 
 |Argument|Description|
 | :--- | :--- |
-| hours=2   |   time of job in hours |
-|session=jlab |  prefix of slurm job  |
-|cpus=4     |   number of cores     | 
-|mem=8G     |   memory per core    |
-|partition=seseml   |   slurm partition  |
-|jlab_port=8888     |   jupyerlab port to try (may change if not available)   | 
-|dask_port=8787     |   [optional] second port to tunnel (i.e., for dask dashboard) |
+| `hours=2`   |   time of job in hours |
+| `session=jlab` |  prefix of slurm job  |
+| `cpus=4`     |   number of cores     |
+| `mem=32G`     |   memory per node (e.g. 32 gigabytes)  |
+| `partition=seseml`   |   slurm partition  |
+| `jlab_port=8888`     |   jupyerlab port to try (may change if not available)   |
+| `dask_port=8787`     |   [optional] second port to tunnel (i.e., for dask dashboard) |
 
 Behavior knobs (env vars)
--   READY_WAIT=0   # seconds to wait here for NODE+PORT; 0 = wait indefinitely (default)
--   PRINT_POLL=1   # polling interval (seconds) while waiting; default 1
--   BASTION=       # optional ProxyJump host, e.g. bastion.illinois.edu (adds -J to OUTER ssh)
+-   `READY_WAIT=0`   # seconds to wait here for NODE+PORT; 0 = wait indefinitely (default)
+-   `PRINT_POLL=1`   # polling interval (seconds) while waiting; default 1
+-   `BASTION=1`       # optional ProxyJump host, e.g. bastion.illinois.edu (adds -J to OUTER ssh)
 
 ## Notes
 - The session should be persistent for the alotted time.  Thus, to reconnect if you lose your connection to keeling during the alotted time, simply re-establish the ssh tunnel.

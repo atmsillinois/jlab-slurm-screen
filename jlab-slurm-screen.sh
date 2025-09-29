@@ -84,12 +84,18 @@ set -euo pipefail
 # env: PARTITION HOURS CPUS MEM JPORT SECS LOG NODEFILE WHEREFILE URLFILE
 {
   echo "[keeling] Launching single srun (compute node payload)…"
+  # Add additional special arguments
+  EXTRA_ARGS=""
+  if [ "$PARTITION" = "l40s" ]; then
+    EXTRA_ARGS="--gres=gpu:L40S:1"
+  fi
   srun -p "$PARTITION" \
        --time="${HOURS}:00:00" \
        --cpus-per-task="$CPUS" \
        --mem="$MEM" \
        --exclusive -N1 -n1 \
        --job-name="jlab_${USER}" \
+       $EXTRA_ARGS \
        bash -lc '
          set -euo pipefail
          {
@@ -125,10 +131,25 @@ cat > "$WATCHER" <<'WS'
 set -euo pipefail
 # env: LOG NODEFILE URLFILE PORTFILE TUNNELFILE JPORT DPORT ME HEAD BASTION_OPT
 for i in $(seq 1 7200); do  # up to 2h
+  START=$(date +%s)
+  TIMEOUT=7200  # seconds
   # Grab first Jupyter token URL
-  if [[ ! -s "$URLFILE" ]]; then
-    grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG" | head -n1 > "$URLFILE" 2>/dev/null || true
-  fi
+  while [[ ! -s "$URLFILE" ]]; do
+    if [[ -r "$LOG" ]]; then
+      URL=$((grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG"  || true) | head -n1)
+      if [[ -n "$URL" ]]; then
+        echo "$URL" > "$URLFILE"
+        break
+      fi
+      sleep 1
+
+      NOW=$(date +%s)
+      if (( NOW - START >= TIMEOUT )); then
+         exit 1 # Timeout reached
+      fi
+    fi
+  done
+
   # Extract actual port from URL
   if [[ -s "$URLFILE" && ! -s "$PORTFILE" ]]; then
     awk -F[/:] '{for(i=1;i<=NF;i++) if($i ~ /^[0-9]+$/ && $(i-1) ~ /127\.0\.0\.1/) {print $i; exit}}' "$URLFILE" > "$PORTFILE" 2>/dev/null || true
