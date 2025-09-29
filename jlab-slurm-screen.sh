@@ -125,23 +125,22 @@ cat > "$WATCHER" <<'WS'
 set -euo pipefail
 # env: LOG NODEFILE URLFILE PORTFILE TUNNELFILE JPORT DPORT ME HEAD BASTION_OPT
 for i in $(seq 1 7200); do  # up to 2h
-  # ensure log file exists
-  if [[ -r "$LOG" ]]; then
-
   START=$(date +%s)
   TIMEOUT=7200  # seconds
   # Grab first Jupyter token URL
   while [[ ! -s "$URLFILE" ]]; do
-    URL=$((grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG"  || true) | head -n1)
-    if [[ ! -z "$URL" ]]; then
-      echo "$URL" > "$URLFILE"
-      break
-    fi
-    sleep 1
+    if [[ -r "$LOG" ]]; then
+      URL=$((grep -Eo "http://127\.0\.0\.1:[0-9]+/[^ ]+" "$LOG"  || true) | head -n1)
+      if [[ -n "$URL" ]]; then
+        echo "$URL" > "$URLFILE"
+        break
+      fi
+      sleep 1
 
-    NOW=$(date +%s)
-    if (( NOW - START >= TIMEOUT )); then
-       exit 1 # Timeout reached
+      NOW=$(date +%s)
+      if (( NOW - START >= TIMEOUT )); then
+         exit 1 # Timeout reached
+      fi
     fi
   done
 
@@ -171,7 +170,6 @@ ssh $BASTION_OPT -L ${ACTPORT}:127.0.0.1:${ACTPORT} ${ME}@${HEAD} \
 EOF
     fi
     exit 0
-  fi
   fi
   sleep 1
 done
