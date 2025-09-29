@@ -104,9 +104,9 @@ set -euo pipefail
          hostname > "'"$NODEFILE"'"
 
          # Activate Python/Jupyter env (customize as needed)
-#         module load python/3.11 2>/dev/null || true
+         module load python/3.11 2>/dev/null || true
          # OR: source ~/mambaforge/etc/profile.d/conda.sh && conda activate myenv
-         conda activate xwrf
+
          echo "[compute] Starting Jupyter (timeout '"$SECS"'s) on requested port '"$JPORT"'"
          timeout '"$SECS"' jupyter lab \
            --no-browser \
