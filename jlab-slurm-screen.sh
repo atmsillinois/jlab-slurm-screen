@@ -84,12 +84,18 @@ set -euo pipefail
 # env: PARTITION HOURS CPUS MEM JPORT SECS LOG NODEFILE WHEREFILE URLFILE
 {
   echo "[keeling] Launching single srun (compute node payload)…"
+  # Add additional special arguments
+  EXTRA_ARGS=""
+  if [ "$PARTITION" = "l40s" ]; then
+    EXTRA_ARGS="--gres=gpu:L40S:1"
+  fi
   srun -p "$PARTITION" \
        --time="${HOURS}:00:00" \
        --cpus-per-task="$CPUS" \
        --mem="$MEM" \
        --exclusive -N1 -n1 \
        --job-name="jlab_${USER}" \
+       $EXTRA_ARGS \
        bash -lc '
          set -euo pipefail
          {
